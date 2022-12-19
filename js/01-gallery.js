@@ -7,29 +7,40 @@ const refs = {
   items: document.querySelectorAll(".gallery__item"),
 };
 
-// ----------------------- Функція, яка спрацьовує на нажимання Escape -------------------------
-const onPressEsc = (e) => {
-  if (e.code == "Escape") console.log("YES ESC");
-  document.removeEventListener("keydown", onPressEsc);
-};
-
-// ----------------------- Заповнюєм галерею зображеннями -------------------------
+// --- Заповнюєм галерею зображеннями ---
 refs.images.forEach((img, i) => {
   img.setAttribute("src", galleryItems[i].preview);
   img.setAttribute("alt", galleryItems[i].description);
 });
 
-// ----------------------- Додаємо загальну подію на всі зображення -------------------------
+// --- Додаємо загальну подію на всі зображення ---
 refs.gallery.addEventListener("click", (e) => {
   e.preventDefault();
+
+  // --- Шукаємо потрібне фото в списку ---
   const targetImg = galleryItems.find(
     ({ description }) => description === e.target.getAttribute("alt")
   );
-  const markup = ` <div class="modal"><img src="${targetImg.original}" alt="${targetImg.description}" width="900"> </div>`;
-  basicLightbox
-    .create(markup, {
-      onClose: () => false,
-    })
-    .show();
-  document.addEventListener("keydown", onPressEsc);
+
+  // --- Створюєм розмітку майбутнього тегу -----
+  const markup = `<img src="${targetImg.original}" alt="${targetImg.description}" width="900">`;
+
+  // --- Створюєм екземпляр майбутнього тегу ---
+  const instance = basicLightbox.create(markup, {
+    onShow: (instance) => {
+      // --- Функція, яка закриває модалку на нажимання Escape ---
+      const onPressEsc = (e) => {
+        if (e.code == "Escape") {
+          instance.close();
+          document.removeEventListener("keydown", onPressEsc);
+        }
+      };
+
+      // --- Навішування функції на нажимання клавіатури ---
+      document.addEventListener("keydown", onPressEsc);
+    },
+  });
+
+  // --- Фінальний етап - показуєм модальне вікно ---
+  instance.show();
 });
