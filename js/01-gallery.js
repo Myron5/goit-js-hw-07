@@ -28,6 +28,8 @@ refs.gallery.addEventListener("click", (e) => {
   const idx = e.target.getAttribute("js-idx");
   const targetImg = galleryItems[idx];
   const markup = `<img src="${targetImg.original}" alt="${targetImg.description}" width="900">`;
-  const instance = basicLightbox.create(markup, { onShow: onEscEventListener });
+  const instance = basicLightbox.create(markup, {
+    onShow: onEscEventListener,
+  });
   instance.show();
 });
