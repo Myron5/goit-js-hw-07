@@ -10,6 +10,7 @@ const refs = {
 const onEscEventListener = (instance) => {
   const onPressEsc = (e) => {
     if (e.code !== "Escape") return false;
+    instance.close();
     document.removeEventListener("keydown", onPressEsc);
   };
   document.addEventListener("keydown", onPressEsc);
@@ -27,7 +28,7 @@ refs.gallery.addEventListener("click", (e) => {
   const targetImg = galleryItems[idx];
   const markup = `<img src="${targetImg.original}" alt="${targetImg.description}" width="900">`;
   const instance = basicLightbox.create(markup, {
-    onClose: onEscEventListener,
+    onShow: onEscEventListener,
   });
   instance.show();
 });
